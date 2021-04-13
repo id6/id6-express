@@ -6,6 +6,10 @@
 <h1 align="center">id6-express</h1>
 <p align="center">Express middleware for id6</p>
 
+<p align="center">
+  <img alt="npm" src="https://img.shields.io/npm/v/@id6/express">
+</p>
+
 ## Usage
 
 Install dependencies:
