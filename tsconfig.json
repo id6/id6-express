@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "**/*.spec.ts",
+  ],
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceRoot": "src",
+    "outDir": "build",
+    "noImplicitAny": false,
+    "sourceMap": true
+  }
+}

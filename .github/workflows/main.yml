@@ -1,0 +1,50 @@
+name: main
+on: [ push, pull_request ]
+env:
+  GITHUB_REPOSITORY_SSH_URL: "git@github.com:${{ github.repository }}.git"
+  IS_RELEASE_BRANCH: "${{ github.ref == 'refs/heads/latest' || github.ref == 'refs/heads/next' }}"
+  GIT_AUTHOR_NAME: "id6-release-bot"
+  GIT_COMMITTER_NAME: "id6-release-bot"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: "install dependencies"
+        run: npm ci
+      - name: "create VERSION file"
+        if: ${{ env.IS_RELEASE_BRANCH == 'true' }}
+        run: |
+          source ./scripts/setup-git.sh "$RELEASE_DEPLOY_KEY"
+          npx semantic-release -d -r $GITHUB_REPOSITORY_SSH_URL
+          npm version --no-git-tag-version $(cat VERSION) --allow-same-version
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: "test"
+        run: npm run test
+      - name: "build"
+        run: npm run build
+      - name: "release"
+        if: ${{ env.IS_RELEASE_BRANCH == 'true' }}
+        run: |
+          source ./scripts/setup-git.sh "$RELEASE_DEPLOY_KEY"
+          # allow publishing scoped package as public to avoid 402
+          npm config set access public
+          npx semantic-release -r $GITHUB_REPOSITORY_SSH_URL
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: "realign next"
+        if: ${{ env.IS_RELEASE_BRANCH == 'true' }}
+        run: |
+          source ./scripts/setup-git.sh "$RELEASE_DEPLOY_KEY"
+          HEAD_BRANCH=`echo "${GITHUB_REF//refs\/heads\//}" | tr -d '\n'`
+          ./scripts/rebase-git-branch.sh "next" "$HEAD_BRANCH"
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
