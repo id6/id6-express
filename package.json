@@ -1,6 +1,6 @@
 {
   "name": "@id6/express",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "id6 ExpressJS integration",
   "main": "build/index.js",
   "files": [

@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/id6/id6-express/compare/v1.0.4...v1.0.5) (2021-04-14)
+
+
+### Bug Fixes
+
+* trigger release ([21ac816](https://github.com/id6/id6-express/commit/21ac816a2d97513994d50a20c6ed17ad32547514))
+
 ## [1.0.3](https://github.com/id6/id6-express/compare/v1.0.2...v1.0.3) (2021-04-13)
 
 
