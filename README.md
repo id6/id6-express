@@ -32,10 +32,15 @@ Setup authentication:
 ```js
 require('dotenv/config'); // loads .env in process.env
 const express = require('express');
+const express = require('cors');
 const { authenticate, isAuthenticated } = require('id6-express');
 
 const app = express();
 
+app.use(cors({
+  origin: 'https://app.company.com',
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(authenticate);
 
