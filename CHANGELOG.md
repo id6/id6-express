@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/id6/id6-express/compare/v1.0.5...v1.1.0) (2021-05-31)
+
+
+### Features
+
+* auth middleware should accept options ([2827e88](https://github.com/id6/id6-express/commit/2827e88e43e43444e49dcdb9c72671b22e782ba9))
+
 ## [1.0.5](https://github.com/id6/id6-express/compare/v1.0.4...v1.0.5) (2021-04-14)
 
 
