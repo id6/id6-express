@@ -13,25 +13,30 @@ export class AuthorizationError extends Error {
   }
 }
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies.auth;
-  if (!token) {
-    return next();
+export function authenticate({url, secret}: {
+  url: string;
+  secret: string;
+}) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.auth;
+    if (!token) {
+      return next();
+    }
+    axios
+      .post(`${url}/authorize`, { token }, {
+        headers: {
+          Authorization: secret,
+        },
+      })
+      .then(({ data: { user, error } }) => {
+        if (error) {
+          return next(new AuthorizationError('Could not authorize request','validation_error', error));
+        }
+        req.user = user;
+        next();
+      })
+      .catch(err => {
+        next(new AuthorizationError('Could not authorize request', 'axios_error',err));
+      });
   }
-  axios
-    .post(`${process.env.ID6_AUTHORIZATION_URL}/authorize`, { token }, {
-      headers: {
-        Authorization: process.env.ID6_AUTHORIZATION_SECRET,
-      },
-    })
-    .then(({ data: { user, error } }) => {
-      if (error) {
-        return next(new AuthorizationError('Could not authorize request','validation_error', error));
-      }
-      req.user = user;
-      next();
-    })
-    .catch(err => {
-      next(new AuthorizationError('Could not authorize request', 'axios_error',err));
-    });
 }

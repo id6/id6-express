@@ -18,19 +18,9 @@ Install dependencies:
 npm i @id6/express cookie-parser dotenv
 ```
 
-Create a `.env` file:
-
-```dotenv
-# URL of your id6 authorization endpoint
-ID6_AUTHORIZATION_URL=https://authorize.company.com
-# secret to access your id6 authorization endpoint
-ID6_AUTHORIZATION_SECRET=changeMe
-```
-
 Setup authentication:
 
 ```js
-require('dotenv/config'); // loads .env in process.env
 const express = require('express');
 const express = require('cors');
 const { authenticate, isAuthenticated } = require('id6-express');
@@ -38,11 +28,16 @@ const { authenticate, isAuthenticated } = require('id6-express');
 const app = express();
 
 app.use(cors({
-  origin: 'https://app.company.com',
+  // 1. allow browsers to send the auth cookie
   credentials: true,
 }));
+// 2. make sure express parses cookies
 app.use(cookieParser());
-app.use(authenticate);
+// 3. add the auth middleware
+app.use(authenticate({
+  url: 'https://authorize.company.com',
+  secret: 'changeMe',
+}));
 
 app.get('/hello', (req, res) => {
   const user = req.user; // set by id6

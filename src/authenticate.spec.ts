@@ -12,14 +12,11 @@ describe('authenticate', () => {
   let error: any;
 
   beforeEach(async () => {
-    process.env.ID6_AUTHORIZATION_URL = 'http://auth.server.com';
-    process.env.ID6_AUTHORIZATION_SECRET = 'secret';
-
     error = undefined;
 
     app = express();
     app.use(cookieParser());
-    app.use(authenticate);
+    app.use(authenticate({url:'http://auth.server.com', secret: 'secret' }));
     app.use('*', (req, res) => {
       res.json(req.user || null);
     });
