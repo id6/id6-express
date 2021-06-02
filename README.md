@@ -22,7 +22,7 @@ Setup authentication:
 
 ```js
 const express = require('express');
-const express = require('cors');
+const cors = require('cors');
 const { authenticate, isAuthenticated } = require('id6-express');
 
 const app = express();
