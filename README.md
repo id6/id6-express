@@ -23,7 +23,8 @@ Setup authentication:
 ```js
 const express = require('express');
 const cors = require('cors');
-const { authenticate, isAuthenticated } = require('id6-express');
+const cookieParser = require('cookie-parser');
+const { authenticate, isAuthenticated } = require('@id6/express');
 
 const app = express();
 
@@ -44,8 +45,7 @@ app.get('/hello', (req, res) => {
   res.json(user ? 'Authenticated' : 'Anonymous');
 });
 app.get('/private', isAuthenticated, (req, res) => {
-  const user = req.user; // set by id6
-  res.json(user ? 'Authenticated' : 'Anonymous');
+  res.json('This is top secret !');
 });
 
 app.listen(8000, () => console.log(`Listening on port 8000`));
